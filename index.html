@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="kr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1.0,minimum-scale=1.0,maximum-scale=1.0" />
+    <title>22.8 스텐 셀프 견적</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <main class="container">
+      <header class="main-header">#22.8 스텐 셀프 견적</header>
+      <section class="option-section">
+        <form class="option-form">
+          <div class="sample-image-box hide" style="margin-bottom: 24px;">
+            <img id="sampleImage" src="sample_default.jpg" alt="샘플 이미지" class="hide" />
+          </div>
+          <div class="option-row">
+            <div class="option-group">
+              <label for="type" class="option-title">표면종류</label>
+              <select required id="type" class="select-box">
+                <option value="a">옵션을 선택해 주세요</option>
+                <option value="2B">2B</option>
+                <option value="HL">H/L</option>
+                <option value="Mirror">Mirror</option>
+                <option value="BLK_HL">Black H/L</option>
+                <option value="GOL_HL">Gold H/L</option>
+                <option value="GOL_Mirror">Gold Mirror</option>
+              </select>
+            </div>
+            <div class="option-group">
+              <label for="thickness" class="option-title">두께</label>
+              <select required id="thickness" class="select-box">
+                <option value="a">옵션을 선택해 주세요</option>
+                <option value="0.8">0.8 T</option>
+                <option value="1">1 T</option>
+                <option value="1.2">1.2 T</option>
+                <option value="1.5">1.5 T</option>
+                <option value="2">2 T</option>
+              </select>
+            </div>
+            <div class="option-group">
+              <label for="quantity" class="option-title">수량</label>
+              <input type="number" placeholder="수량" id="quantity" min="1" required />
+            </div>
+          </div>
+          <div class="option-row">
+            <div class="option-group">
+              <label class="option-title" for="width">가로 (mm)</label>
+              <input id="width" class="option-width" required placeholder="가로 (mm)" type="number" min="50" max="1219" />
+            </div>
+            <div class="option-group">
+              <label class="option-title" for="height">세로 (mm)</label>
+              <input id="height" class="option-length" required placeholder="세로 (mm)" type="number" min="50" max="2438" />
+            </div>
+          </div>
+          <div class="option-row">
+            <button class="submit-btn" type="button">계산 & 추가하기</button>
+          </div>
+        </form>
+      </section>
+      
+      <!-- 견적 리스트 (동적으로 추가될 카드들) -->
+      <section id="estimateListBox" style="margin-top: 32px; display: flex; flex-direction: column; align-items: center;">
+      </section>
+      
+      <!-- 견적 결과 -->
+      <section class="result-section">
+        <div class="result-card hide" id="resultCard">
+          <div class="result-header">결제 정보</div>
+          <div class="result-body">
+            <!-- 총 견적 금액 -->
+            <div class="payment-total">
+              <span class="payment-label">총 결제금액</span>
+              <span class="payment-amount" id="estimatePrice">0</span>원
+            </div>
+            
+            <!-- 결제 방법 안내 -->
+            <div class="payment-method">
+              <div class="payment-method-title">결제 수량 입력</div>
+              <div class="payment-inputs">
+                <div class="payment-input-row" id="pay1000Row">
+                  <span class="input-label">1,000원 단위</span>
+                  <div class="input-box">
+                    <span class="input-desc">수량</span>
+                    <span class="input-value" id="pay1000">0</span>개
+                  </div>
+                </div>
+                <div class="payment-input-row" id="pay100Row">
+                  <span class="input-label">100원 단위</span>
+                  <div class="input-box">
+                    <span class="input-desc">수량</span>
+                    <span class="input-value" id="pay100">0</span>개
+                  </div>
+                </div>
+                <div class="payment-input-row" id="edgeRow">
+                  <span class="input-label">면모서리가공(별도)</span>
+                  <div class="input-box">
+                    <span class="input-desc">수량</span>
+                    <span class="input-value" id="edgeQuantity">0</span>개
+                  </div>
+                </div>
+              </div>
+            </div>
+            
+            <!-- 결제 버튼 -->
+            <div class="payment-button-area">
+              <div id="shippingNotice" class="shipping-notice hide">
+                <span class="shipping-title">⚠️ 경동택배 착불 발송</span>
+                <span class="shipping-separator">|</span>
+                <span class="shipping-reason">부피 및 무게 초과</span>
+                <span class="shipping-separator">|</span>
+                <span class="shipping-subtitle">결제시 착불 선택</span>
+              </div>
+              <a href="https://mkt.shopping.naver.com/link/686b9a522659cd423b21b54f" target="_blank" class="naver-payment-btn">네이버 결제 바로가기</a>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <!-- 팝업 -->
+    <div id="popup" class="popup-overlay hide">
+      <div class="popup-content">
+        <div class="popup-title">최소 재단 50mm</div>
+        <div class="popup-message">그 이하 재단 문의 요청</div>
+        <button class="popup-btn" onclick="closePopup()">확인</button>
+      </div>
+    </div>
+
+    <script src="index.js"></script>
+  </body>
+</html>
