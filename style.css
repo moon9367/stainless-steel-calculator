@@ -94,6 +94,10 @@ body {
   box-shadow: 0 2px 8px rgba(99, 102, 241, 0.04);
 }
 
+.select-box option:first-child {
+  font-size: 0.8rem;
+}
+
 .option-width, .option-length, #quantity {
   padding: 14px 16px;
   border: 2px solid #e5e7eb;

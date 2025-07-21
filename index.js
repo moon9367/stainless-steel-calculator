@@ -24,19 +24,70 @@ const pay100Span = document.getElementById('pay100');
 // 견적 리스트 누적 영역 (HTML에서 이미 정의됨)
 const estimateListBox = document.getElementById('estimateListBox');
 
+// 표면별 사용 가능한 두께 정의
+const surfaceThickness = {
+  'HL': ['0.8T', '1.0T', '1.2T', '1.5T', '2.0T'],
+  '2B': ['0.8T', '1.0T', '1.2T', '1.5T', '2.0T'],
+  'Mirror': ['1.0T', '1.2T', '1.5T', '2.0T'],
+  'BLK_HL': ['1.2T'],
+  'GOL_HL': ['1.2T'],
+  'GOL_Mirror': ['1.2T']
+};
+
+// 두께 옵션 업데이트 함수
+function updateThicknessOptions(surfaceType) {
+  const thicknessSelect = document.getElementById('thickness');
+  const currentThickness = thicknessSelect.value;
+  const availableThickness = surfaceThickness[surfaceType] || [];
+  
+  // 기존 옵션 제거
+  thicknessSelect.innerHTML = '<option value="">두께 선택</option>';
+  
+  // 새로운 옵션 추가
+  availableThickness.forEach(thickness => {
+    const option = document.createElement('option');
+    option.value = thickness;
+    option.textContent = thickness;
+    thicknessSelect.appendChild(option);
+  });
+  
+  // 기존 선택값이 새로운 옵션에 있으면 유지
+  if (currentThickness && availableThickness.includes(currentThickness)) {
+    thicknessSelect.value = currentThickness;
+  }
+}
+
+// 표면과 두께 조합 유효성 검사
+function validateSurfaceThickness(surface, thickness) {
+  const availableThickness = surfaceThickness[surface] || [];
+  return availableThickness.includes(thickness);
+}
+
 // 진입 시 샘플 이미지 박스와 이미지 모두 숨김
 sampleImageBox.classList.add('hide');
 sampleImage.classList.add('hide');
 
-typeSelect.addEventListener('change', function () {
-  const value = typeSelect.value;
-  if (surfaceImages[value]) {
-    sampleImage.src = surfaceImages[value];
-    sampleImageBox.classList.remove('hide');
-    sampleImage.classList.remove('hide');
+// 표면종류 선택 이벤트 리스너
+typeSelect.addEventListener('change', function() {
+  const selectedType = this.value;
+  
+  if (selectedType && selectedType !== 'a') {
+    // 샘플 이미지 업데이트
+    if (surfaceImages[selectedType]) {
+      sampleImage.src = surfaceImages[selectedType];
+      sampleImageBox.classList.remove('hide');
+      sampleImage.classList.remove('hide');
+    }
+    
+    // 두께 옵션 업데이트 (기존 선택 유지)
+    updateThicknessOptions(selectedType);
   } else {
+    // 샘플 이미지 숨김
     sampleImageBox.classList.add('hide');
     sampleImage.classList.add('hide');
+    
+    // 두께 옵션 초기화
+    thicknessSelect.innerHTML = '<option value="">두께 선택</option>';
   }
 });
 
@@ -97,9 +148,9 @@ function calculateEstimate() {
     '2B': { '0.8': 223, '1': 271, '1.2': 317, '1.5': 388, '2': 506 },
     'HL': { '0.8': 244, '1': 295, '1.2': 346, '1.5': 420, '2': 548 },
     'Mirror': { '1': 330, '1.2': 385, '1.5': 460, '2': 598 },
-    'BLK_HL': { '1.5': 500, '2': 500 },
-    'GOL_HL': { '1.5': 627, '2': 627 },
-    'GOL_Mirror': { '1.5': 627, '2': 627 },
+    'BLK_HL': { '1.2': 500 },
+    'GOL_HL': { '1.2': 627 },
+    'GOL_Mirror': { '1.2': 627 },
   };
 
   // 면적 계산 (50mm 단위 올림)
@@ -156,8 +207,14 @@ submitBtn.addEventListener('click', function() {
   const width = parseInt(widthInput.value);
   const height = parseInt(heightInput.value);
 
-  if (!type || !thickness || isNaN(quantity) || isNaN(width) || isNaN(height)) {
+  if (!type || type === 'a' || !thickness || isNaN(quantity) || isNaN(width) || isNaN(height)) {
     alert('모든 값을 입력해주세요.');
+    return;
+  }
+
+  // 표면과 두께 조합 유효성 검사
+  if (!validateSurfaceThickness(type, thickness)) {
+    alert('선택하신 표면에서는 해당 두께를 사용할 수 없습니다.\n올바른 두께를 선택해주세요.');
     return;
   }
 
